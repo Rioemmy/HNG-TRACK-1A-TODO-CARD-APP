@@ -1,0 +1,261 @@
+
+/* general styles for the page and the todo cards */
+body {
+  font-family: Arial;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+article {
+  margin: 1rem auto;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease; 
+  box-shadow: 0 4px 6px rgba(36, 35, 35, 0.1);
+}
+
+button:hover {
+  background-color: #737773;
+  transform: translateY(-3px); 
+   box-shadow: 0 7px 14px rgba(0,0,0,0.2); 
+}
+
+
+/* general but specific for the input container  */
+input,
+textarea,
+select {
+  background-color: #f8f7f7;
+  border: none;
+}
+
+textarea {
+  flex: 1;
+}
+
+/* styling for the everyting on the input container  */
+.input-title,
+.input-description {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-description {
+  height: 40px;
+}
+
+.input-description input,
+.input-title input {
+  height: 100%;
+  flex-grow: 1;
+}
+.input-due-time, .input-priority, .input-tag {
+
+  margin-bottom: 0.5rem;
+}
+
+.input-layer-three {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  justify-content: space-between;
+}
+
+.input-tag > input {
+  width: 4.5rem;
+}
+
+.input-container {
+  margin-bottom: 3rem;
+  background-color: #ccc;
+  padding: 2rem;
+  border-radius: 2rem;
+}
+
+.add-btn {
+  padding: 0.8rem;
+  font-size: 0.7rem;
+  background-color: #858591;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: #f9f9f9;
+  margin-top: 1rem;
+}
+
+/* everything in the card container and the cards themselves */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 1rem;
+}
+
+.cards {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 560px;
+}
+
+/* outline for the edit state of the card
+It is made using background gradients and keyframe animation. */
+.edit-outline {
+  padding: 0.2rem;
+  background: 
+    linear-gradient(90deg, #59635c 50%, #0000 0) repeat-x top,
+    linear-gradient(90deg, #59635c 50%, #0000 0) repeat-x bottom,
+    linear-gradient(0deg, #59635c 50%, #0000 0) repeat-y left,
+    linear-gradient(0deg, #59635c 50%, #0000 0) repeat-y right;
+  background-size: 6px 1px, 6px 1px, 1px 6px, 1px 6px;
+  animation: m 20s infinite linear;
+  background-color: white;
+  outline: none;
+  border-radius: 0.3rem;
+}
+
+@keyframes m { to { background-position: 12px 0, -12px 100%, 0 -12px, 100% 12px; } }
+
+
+
+
+.icons {
+  width: 1.5rem;
+  height: 2rem;
+  margin-right: 0.2rem;
+}
+
+.edit,
+.delete {
+  background-color: #8d99a5;
+  display: inline-flex;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+}
+
+.edit-priority {
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.time-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.tag-container {
+  background-color: #8d99a5;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-layer-one {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-layer-four {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-layer-three {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-status,
+.card-priority {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.card-body {
+  max-height: 500px; /* big enough */
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.collapsed .card-body {
+  max-height: 0;
+  opacity: 0;
+}
+
+/*-------- toggle switch ------- */
+
+/* The switch - the box around the slider */
+.switch-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 30px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The track (background) */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 30px;
+}
+
+/* The circular knob */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 23px;
+  width: 23px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+/* Change background when checked */
+input:checked + .slider {
+  background-color: #0baa3a;
+}
+
+/* Move the knob to the right when checked */
+input:checked + .slider:before {
+  transform: translateX(23px);
+}
+

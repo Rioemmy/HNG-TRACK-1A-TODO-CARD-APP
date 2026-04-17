@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo-Cards</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <article>
+
+        <section class="input-container">
+
+            <div class="input-title">
+                <label>Title</label>
+                <input placeholder="Enter Card Todo Title..." type="text" id="title">
+            </div>
+
+            <div class="input-description">
+                <label>Description</label>
+                <textarea name="description" placeholder="Enter Card Todo Description..."></textarea>
+            </div>
+
+            <div class="input-layer-three">
+                <div class="input-due-time">
+                    <label>Time</label>
+                    <input type="datetime-local" name="due-time" id="due-time">
+                </div>
+
+                <div class="input-priority">
+                    <label>Priority</label>
+                    <select name="priority">
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option selected value="Low">Low</option>
+                    </select>
+                </div>
+
+                <div class="input-tag">
+                    <label for="tag">Tag</label>
+                    <input type="text" name="tag" placeholder="Enter tag...">
+                </div>
+
+
+            </div>
+            
+                <button aria-label="Add card" class="add-btn">Add Card</button>
+
+        </section>
+
+        <div class="card-container">
+
+        </div>
+
+    </article>
+
+    <script type="module" src="./script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+
+</body>
+
+</html>
