@@ -14,39 +14,22 @@ document.querySelector('.add-btn').addEventListener('click', () => {
 
 
 // the cards array to hold the todo cards
-let cards = [
+let cards = JSON.parse(localStorage.getItem('cards')) || [
     {
-        priority: 'High',
+        priority: high,
         status: 'pending',
-        title: 'Read Lupin Book',
-        description: 'Read the book and write a review about it',
-        dueTime: '2026-06-30 10:00:00',
-        tag: 'leisure',
+        title: 'playing',
+        description: 'playing football',
+        dueTime: getDueTime(75845665445),
+        tag: 'work',
         id: crypto.randomUUID()
-
-    },
-    {
-        priority: 'Medium',
-        status: 'pending',
-        title: 'Read hilton deacon book',
-        description: 'Read the book and write a review about it',
-        dueTime: '2026-06-30 10:00:00',
-        tag: 'leisure',
-        id: crypto.randomUUID()
-
-    },
-    {
-        priority: 'Low',
-        status: 'pending',
-        title: 'Read maxwell article',
-        description: 'Read the book and write a review about it',
-        dueTime: '2026-06-30 10:00:00',
-        tag: 'leisure',
-        id: crypto.randomUUID()
-
     }
-]
+];
 
+
+function saveToCards() {
+    localStorage.setItem('cards', JSON.stringify(cards));
+}
 
 
 // add Todo card to the cards array 
@@ -65,6 +48,8 @@ function addCard() {
             id: crypto.randomUUID()
         });
 
+
+
         priority.value = 'High';
         title.value = '';
         description.value = '';
@@ -76,7 +61,7 @@ function addCard() {
     else {
         alert('Please fill in all fields');
     }
-
+    saveToCards()
     displayCards();
 
 }
@@ -152,7 +137,7 @@ function displayCards() {
 
         cardHtml += `
           <section class="cards js-card-${card.id}" data-testid="test-todo-card" role="region">
-
+    
                 <div class="card-layer-one">
                     <div class="collapse-priority-container">
                         <button aria-label="collapse card" class="collapse-btn js-collapse" data-id="${card.id}">
@@ -199,10 +184,10 @@ function displayCards() {
 
                     <div class="card-layer-four">
 
-                            <button data-testid="test-todo-edit-button" aria-label="Edit card" data-id="${card.id}" class="edit js-edit js-edit-${card.id}">
+                            <button aria-label="Edit button" data-id="${card.id}" class="edit js-edit js-edit-${card.id}">
                             <img class="icons" src="./images/edit-icon.svg" alt=""> <span class="icon-texts"> Edit </span>
                         </button>
-                        <button data-testid="test-todo-delete-button" aria-label="Delete card" data-id="${card.id}" class="delete js-delete js-delete-${card.id}">
+                        <button aria-label="Delete button" data-id="${card.id}" class="delete js-delete js-delete-${card.id}">
                             <img class="icons" src="./images/delete-icon.svg" alt=""> <span  class="icon-texts"> Delete </span>
                         </button>
                 
@@ -219,6 +204,7 @@ function displayCards() {
 }
 
 // running the function to display the cards on page load
+saveToCards();
 displayCards();
 
 
@@ -231,54 +217,21 @@ document.querySelector('.card-container').addEventListener('click', (e) => {
 
     const cardId = deleteBtn.dataset.id;
 
-    const titleElement = document.querySelector(`.card-title-${cardId}`);
-    const descriptionElement = document.querySelector(`.card-description-${cardId}`);
-    const tagElement = document.querySelector(`.card-tag-${cardId}`);
-    const priorityElement = document.querySelector(`.js-card-priority-${cardId}`);
-    const dueTimeElement = document.querySelector(`.js-due-time-${cardId}`);
-    const deleteBtnElement = document.querySelector(`.js-delete-${cardId}`);
-    const editBtnElement = document.querySelector(`.js-edit-${cardId}`);
+
+    const deleteBtnElem = document.querySelector(`.js-delete-${cardId}`);
 
 
-    const isEditing = deleteBtnElement.classList.contains('editing')
+    document.querySelector(`.js-card-${cardId}`).remove();
 
-    if (isEditing) {
-        cards.forEach((card) => {
-
-            if (card.id === cardId) {
-                card.priority = priority.value,
-                    card.title = titleElement.innerText,
-                    card.description = descriptionElement.innerText,
-                    card.dueTime = getDueTime(dueTimeElement.value),
-                    card.tag = tagElement.innerText
-            }
-
-            deleteBtnElement.innerHTML = `
-                    <img class="icons" src="./images/done.svg" alt=""> Done
-                `;
-
-            editBtnElement.innerHTML = `
-                    <img class="icons" src="./images/cancel.svg" alt=""> Cancel
-                `;
-
-            editBtnElement.classList.remove('editing')
-            deleteBtnElement.classList.remove('editing')
-
-        });
-    }
-
-    else {
-        document.querySelector(`.js-card-${cardId}`).remove();
-
-        cards = cards.filter((card) => card.id !== cardId)
-        displayCards()
-    }
-
+    cards = cards.filter((card) => card.id !== cardId)
+    saveToCards()
+    displayCards()
 
 });
 
 
 const backup = {}
+
 
 // edit buttons event listeners to edit a card from the
 document.querySelector('.card-container').addEventListener('click', (e) => {
@@ -286,106 +239,258 @@ document.querySelector('.card-container').addEventListener('click', (e) => {
     if (!editBtn) return;
 
     const cardId = editBtn.dataset.id;
+    const titleElem = document.querySelector(`.card-title-${cardId}`);
+    const descriptionElem = document.querySelector(`.card-description-${cardId}`);
+    const tagElem = document.querySelector(`.card-tag-${cardId}`);
+    const priorityElem = document.querySelector(`.js-card-priority-${cardId}`);
+    const dueTimeElem = document.querySelector(`.js-due-time-${cardId}`);
+    const cardElem = document.querySelector(`.js-card-${cardId}`);
+    const deleteBtnElem = document.querySelector(`.js-delete-${cardId}`);
+    const editBtnElem = document.querySelector(`.js-edit-${cardId}`);
 
-    const titleElement = document.querySelector(`.card-title-${cardId}`);
-    const descriptionElement = document.querySelector(`.card-description-${cardId}`);
-    const tagElement = document.querySelector(`.card-tag-${cardId}`);
-    const priorityElement = document.querySelector(`.js-card-priority-${cardId}`);
-    const dueTimeElement = document.querySelector(`.js-due-time-${cardId}`);
-    const editBtnElement = document.querySelector(`.js-edit-${cardId}`);
-    const deleteBtnElement = document.querySelector(`.js-delete-${cardId}`);
+    backup[cardId] = {
+        title: titleElem.innerText,
+        description: descriptionElem.innerText,
+        tag: tagElem.innerHTML,
+        priority: priorityElem.innerText,
+        dueTime: dueTimeElem.value
+    }
 
+    const saved = backup[cardId];
 
-    const isEditing = editBtnElement.classList.contains('editing')
+    cardElem.classList.remove('cards')
+    cardElem.classList.add('edit-container')
 
-
-    if (!isEditing) {
-
-        editBtnElement.classList.add('editing')
-        deleteBtnElement.classList.add('editing')
-
-        backup[cardId] = {
-            title: titleElement.innerText,
-            description: descriptionElement.innerText,
-            tag: tagElement.innerHTML,
-            priority: priorityElement.innerHTML,
-            dueTime: dueTimeElement.innerHTML
-        }
-
-        titleElement.classList.add('edit-outline');
-        descriptionElement.classList.add('edit-outline');
-        tagElement.classList.add('edit-outline');
-
-        titleElement.contentEditable = true;
-        descriptionElement.contentEditable = true;
-        tagElement.contentEditable = true;
+    cardElem.setAttribute('data-id', 'test-todo-edit-title-input');
 
 
-        priorityElement.innerHTML = `
-                    
-                            <label>Priority</label>
-                            <select class="edit-priority edit-outline">
-                                <option value="High">High</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Low">Low</option>
-                            </select>
-                        
-                `;
+    cardElem.innerHTML = `
+                   
+            <div class="input-title">
+                <label>Title</label>
+                <input data-testid="test-todo-edit-title-input"  class="edited-title-${cardId}" type="text" value="${saved.title}" id="title">
+            </div>
 
-        dueTimeElement.innerHTML = `
+            <div class="input-description">
+                <label>Description</label>
+                <textarea data-testid="test-todo-edit-description-input" class="edited-description-${cardId}"  name="description">${saved.description}</textarea>
+            </div>
+
+            <div class="input-layer-three">
+                <div class="input-due-time">
                     <label>Time</label>
-                    <input class="edit-outline" type="datetime-local" name="due-time" id="due-time">               
-                `;
-        deleteBtnElement.innerHTML = `
-                    <img class="icons" src="./images/done.svg" alt=""> <span  class="icon-texts"> Done </span>
-                `;
+                    <input data-testid="test-todo-edit-time-input" class="edited-time-${cardId}"  value="${getDueTime(saved.dueTime)}" type="datetime-local" name="due-time" id="due-time">
+                </div>
 
-        editBtnElement.innerHTML = `
-                    <img class="icons" src="./images/cancel.svg" alt=""> <span  class="icon-texts"> Cancel </span>
-       
-                `;
-    }
+                <div class="input-priority">
+                    <label>Priority</label>
+                    <select data-testid="test-todo-edit-priority-input" class="edited-priority-${cardId}"  name="priority">
+                        <option  value="high">High</option>
+                        <option  value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
 
-    else {
+                <div class="input-tag">
+                    <label for="tag">Tag</label>
+                    <input data-testid="test-todo-edit-tag-input" class="edited-tag-${cardId}" value="${saved.tag}" type="text" name="tag">
+                </div>
 
-        editBtnElement.classList.remove('editing');
+            </div>
 
-        const saved = backup[cardId];
+            <div class='editing-btns'>
+                <button aria-label="Cancel button" class="cancel-btn cancel-btn-${cardId}" data-id="${cardId}">
+                 <img class="icons" src="./images/cancel.svg" alt=""> <span class="icon-texts"> Cancel </span>
+                </button>
 
-        priorityElement.innerHTML = saved.priority;
+                <button aria-label="Done button"  class='done-btn done-btn-${cardId}'  data-id="${cardId}">
+                   <img class="icons " src="./images/done.svg" alt=""> <span class="icon-texts"> Done </span>
+                </button>
 
-        tagElement.innerHTML = saved.tag;
-
-        titleElement.innerText = saved.title;
-
-        descriptionElement.innerText = saved.description;
-
-        dueTimeElement.innerHTML = saved.dueTime;
-
-        deleteBtnElement.innerHTML = `
-                    <img class="icons" src="./images/delete-icon.svg" alt=""> <span  class="icon-texts">Delete </span>
-                `
-
-        editBtnElement.innerHTML = `
-                    <img class="icons" src="./images/edit-icon.svg" alt=""> <span  class="icon-texts">Edit </span>
-       
-                `
-        titleElement.classList.remove('edit-outline');
-        descriptionElement.classList.remove('edit-outline');
-        tagElement.classList.remove('edit-outline');
-
-        titleElement.contentEditable = false;
-        descriptionElement.contentEditable = false;
-        tagElement.contentEditable = false;
-    }
+            </div>
+    `
 });
 
 
+document.querySelector('.card-container').addEventListener('click', (e) => {
+    const cancelBtn = e.target.closest('.cancel-btn');
+    if (!cancelBtn) return;
+
+    const cardId = cancelBtn.dataset.id;
+    const cardElem = document.querySelector(`.js-card-${cardId}`);
+    cardElem.classList.add('cards')
+    cardElem.classList.remove('edit-container')
+    const saved = backup[cardId];
+    let savedText = ''
+    savedText = saved.priority
+    const savedPriority = savedText.split(' ')[0];
+    cardElem.setAttribute('data-id', 'test-todo-card');
+
+    cardElem.innerHTML = `
+                <div class="card-layer-one">
+                    <div class="collapse-priority-container">
+                        <button aria-label="collapse button" class="collapse-btn js-collapse" data-id="${cardId}">
+                            <img class="collapse-icons"  src="./images/collapse.svg" alt="">
+                        </button>
+
+                        <span data-testid="test-todo-priority" aria-label="Card priority" class="card-priority js-card-priority-${cardId}">
+                            <img class="icons js-card-priority-icon-${cardId}" src="./images/${savedPriority}-priority-icon.svg" alt=""> ${savedPriority} Priority
+                        </span>
+                    </div>
+                    <span data-testid="test-todo-status" aria-label="Card status" class="card-status js-card-status-${cardId}">
+                        Status: <img class="icons" src="./images/pending-icon.svg" alt=""> Pending
+                    </span>
+                </div>
+
+                    <h3 class="card-title card-title-${cardId}" data-testid="test-todo-title">${saved.title}</h3>
+                <div class="card-body js-card-body-${cardId}">
+                        <p class="card-description card-description-${cardId}" data-testid="test-todo-description">${saved.description}</p>
+                
+                    <div class="time-container">
+                        <time data-testid="test-todo-time-remaining" aria-live="polite" class="time-remaining-${cardId}" datetime="${saved.timeRemaining}">
+                            
+                        </time>
+
+                        <time class="js-due-time-${cardId}" data-testid="test-todo-due-date" datetime="${saved.dueTime}">
+                            Time: ${getDueTime(saved.dueTime)}
+                        </time>
+                    </div>
+
+                    <div class="card-layer-three">
+                        <div data-testid="test-todo-complete-toggle" class="switch-container">
+                            Completed:
+                            <label class="switch">
+                                <input type="checkbox" class="toggle js-toggle toggle-${cardId}" data-id="${cardId}" aria-label="Toggle complete">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div>
+                            <div data-testid="test-todo-tags" role="list" class="tag-container">
+                                <img class="icons" src="./images/tag-icon.svg" alt="">Tag: <span class='card-tag-${cardId}'> ${saved.tag} </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-layer-four">
+
+                        <button aria-label="Edit button" data-id="${cardId}" class="edit js-edit js-edit-${cardId}">
+                            <img class="icons" src="./images/edit-icon.svg" alt=""> <span class="icon-texts"> Edit </span>
+                        </button>
+                        <button  aria-label="Delete button" data-id="${cardId}" class="delete js-delete js-delete-${cardId}">
+                            <img class="icons" src="./images/delete-icon.svg" alt=""> <span  class="icon-texts"> Delete </span>
+                        </button>
+                
+                    
+                    </div>
+                </div>
+    `
+})
+
+const editedCard = {}
+
+document.querySelector('.card-container').addEventListener('click', (e) => {
+
+    const done = e.target.closest('.done-btn');
+    if (!done) return;
+
+    const cardId = done.dataset.id
+    const titleElem = document.querySelector(`.edited-title-${cardId}`);
+    const descriptionElem = document.querySelector(`.edited-description-${cardId}`);
+    const tagElem = document.querySelector(`.edited-tag-${cardId}`);
+    const priorityElem = document.querySelector(`.edited-priority-${cardId}`);
+    const dueTimeElem = document.querySelector(`.edited-time-${cardId}`);
+    const cardElem = document.querySelector(`.js-card-${cardId}`);
+
+    cardElem.classList.add('cards')
+    cardElem.classList.remove('edit-container')
+    cardElem.setAttribute('data-id', 'test-todo-card');
+
+    editedCard[cardId] = {
+        priority: priorityElem.value,
+        title: titleElem.value,
+        description: descriptionElem.value,
+        time: getDueTime(dueTimeElem.value),
+        tag: tagElem.value
+    }
+
+    const editedValue = editedCard[cardId];
+
+    cards.forEach((card) => {
+        if (card.id === cardId) {
+            card.priority = editedValue.priority;
+            card.title = editedValue.title;
+            card.description = editedValue.description;
+            card.dueTime = getDueTime(editedValue.time);
+            card.tag = editedValue.tag;
+        }
+    });
+
+    saveToCards();
+    displayCards();
+
+    cardElem.innerHTML = `
+                <div class="card-layer-one">
+                    <div class="collapse-priority-container">
+                        <button aria-label="collapse button" class="collapse-btn js-collapse" data-id="${cardId}">
+                            <img class="collapse-icons"  src="./images/collapse.svg" alt="">
+                        </button>
+
+                        <span data-testid="test-todo-priority" aria-label="Card priority" class="card-priority js-card-priority-${cardId}">
+                                  <img class="icons js-card-priority-icon-${cardId}" src="./images/${editedValue.priority}-priority-icon.svg" alt=""> ${editedValue.priority} Priority
+                        </span>
+                    </div>
+                    <span data-testid="test-todo-status" aria-label="Card status" class="card-status js-card-status-${cardId}">
+                        Status: <img class="icons" src="./images/pending-icon.svg" alt=""> Pending
+                    </span>
+                </div>
+
+                    <h3 class="card-title card-title-${cardId}" data-testid="test-todo-title">${editedValue.title}</h3>
+                <div class="card-body js-card-body-${cardId}">
+                        <p class="card-description card-description-${cardId}" data-testid="test-todo-description">${editedValue.description}</p>
+                
+                    <div class="time-container">
+                        <time data-testid="test-todo-time-remaining" aria-live="polite" class="time-remaining-${cardId}" datetime="${editedCard.timeRemaining}">
+                            
+                        </time>
+
+                        <time class="js-due-time-${cardId}" data-testid="test-todo-due-date" datetime="${editedCard.time}">
+                            Time: ${getDueTime(editedValue.time)}
+                        </time>
+                    </div>
+
+                    <div class="card-layer-three">
+                        <div data-testid="test-todo-complete-toggle" class="switch-container">
+                            Completed:
+                            <label class="switch">
+                                <input type="checkbox" class="toggle js-toggle toggle-${cardId}" data-id="${cardId}" aria-label="Toggle complete">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div>
+                            <div data-testid="test-todo-tags" role="list" class="tag-container">
+                                <img class="icons" src="./images/tag-icon.svg" alt="">Tag: <span class='card-tag-${cardId}'> ${editedValue.tag} </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-layer-four">
+
+                            <button aria-label="Edit card" data-id="${cardId}" class="edit js-edit js-edit-${cardId}">
+                            <img class="icons" src="./images/edit-icon.svg" alt=""> <span class="icon-texts"> Edit </span>
+                        </button>
+                        <button  aria-label="Delete card" data-id="${cardId}" class="delete js-delete js-delete-${cardId}">
+                            <img class="icons" src="./images/delete-icon.svg" alt=""> <span  class="icon-texts"> Delete </span>
+                        </button>
+                                    
+                    </div>
+                </div>
+    `
+})
 
 
 
 // toggle buttons event listeners to toggle the complete
-//  status of a card and update the status on the page
+//  status of a card and update the status on the page 
 
 document.querySelector('.card-container').addEventListener('change', (e) => {
     const toggle = e.target.closest('.js-toggle');
@@ -393,18 +498,17 @@ document.querySelector('.card-container').addEventListener('change', (e) => {
 
     const cardId = toggle.dataset.id;
 
-    const statusElement = document.querySelector(`.js-card-status-${cardId}`);
-    const titleElement = document.querySelector(`.card-title-${cardId}`);
+    const statusElem = document.querySelector(`.js-card-status-${cardId}`);
+    const titleElem = document.querySelector(`.card-title-${cardId}`);
 
     if (toggle.checked) {
-        statusElement.innerHTML = 'Status: <img class="icons" src="./images/done-icon.svg"> Done';
-        titleElement.style.textDecoration = 'line-through';
+        statusElem.innerHTML = 'Status: <img class="icons" src="./images/done-icon.svg"> Done';
+        titleElem.style.textDecoration = 'line-through';
     } else {
-        statusElement.innerHTML = 'Status: <img class="icons" src="./images/pending-icon.svg"> Pending';
-        titleElement.style.textDecoration = 'none';
+        statusElem.innerHTML = 'Status: <img class="icons" src="./images/pending-icon.svg"> Pending';
+        titleElem.style.textDecoration = 'none';
     }
 });
-
 
 
 
@@ -419,8 +523,8 @@ document.addEventListener('keydown', (e) => {
         default:
             break;
     }
-
 })
+
 
 document.querySelector('.card-container').addEventListener('click', (e) => {
 
@@ -428,18 +532,15 @@ document.querySelector('.card-container').addEventListener('click', (e) => {
     if (!collapseBtn) return;
 
     const cardId = collapseBtn.dataset.id;
-
     const card = document.querySelector(`.js-card-${cardId}`);
 
     card.classList.toggle('collapsed');
-
 
     if (card.classList.contains('collapsed')) {
         collapseBtn.innerHTML = '<img  class="collapse-icons" src="./images/expand.svg" alt=""></img>';
     } else {
         collapseBtn.innerHTML = '<img class="collapse-icons" src="./images/collapse.svg" alt=""></img>';
     }
-
 });
 
 
