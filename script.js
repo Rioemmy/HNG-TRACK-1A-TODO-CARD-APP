@@ -154,15 +154,15 @@ function displayCards() {
           <section class="cards js-card-${card.id}" data-testid="test-todo-card" role="region">
 
                 <div class="card-layer-one">
+                    <div class="collapse-priority-container">
+                        <button aria-label="collapse card" class="collapse-btn js-collapse" data-id="${card.id}">
+                            <img class="collapse-icons"  src="./images/collapse.svg" alt="">
+                        </button>
 
-                <button class="collapse-btn js-collapse" data-id="${card.id}">
-                     Collapse
-                </button>
-
-                    <span data-testid="test-todo-priority" aria-label="Card priority" class="card-priority js-card-priority-${card.id}">
-                        <img class="icons js-card-priority-icon-${card.id}" src="./images/${card.priority}-priority-icon.svg" alt=""> ${card.priority} Priority
-                    </span>
-
+                        <span data-testid="test-todo-priority" aria-label="Card priority" class="card-priority js-card-priority-${card.id}">
+                            <img class="icons js-card-priority-icon-${card.id}" src="./images/${card.priority}-priority-icon.svg" alt=""> ${card.priority} Priority
+                        </span>
+                    </div>
                     <span data-testid="test-todo-status" aria-label="Card status" class="card-status js-card-status-${card.id}">
                         Status: <img class="icons" src="./images/pending-icon.svg" alt=""> Pending
                     </span>
@@ -186,7 +186,7 @@ function displayCards() {
                         <div data-testid="test-todo-complete-toggle" class="switch-container">
                             Completed:
                             <label class="switch">
-                                <input type="checkbox" class="checkbox js-toggle toggle-${card.id}" data-id="${card.id}" aria-label="Toggle complete">
+                                <input type="checkbox" class="toggle js-toggle toggle-${card.id}" data-id="${card.id}" aria-label="Toggle complete">
                                 <span class="slider"></span>
                             </label>
                         </div>
@@ -200,10 +200,10 @@ function displayCards() {
                     <div class="card-layer-four">
 
                             <button data-testid="test-todo-edit-button" aria-label="Edit card" data-id="${card.id}" class="edit js-edit js-edit-${card.id}">
-                            <img class="icons" src="./images/edit-icon.svg" alt="">Edit
+                            <img class="icons" src="./images/edit-icon.svg" alt=""> <span class="icon-texts"> Edit </span>
                         </button>
                         <button data-testid="test-todo-delete-button" aria-label="Delete card" data-id="${card.id}" class="delete js-delete js-delete-${card.id}">
-                            <img class="icons" src="./images/delete-icon.svg" alt="">Delete
+                            <img class="icons" src="./images/delete-icon.svg" alt=""> <span  class="icon-texts"> Delete </span>
                         </button>
                 
                     
@@ -337,11 +337,11 @@ document.querySelector('.card-container').addEventListener('click', (e) => {
                     <input class="edit-outline" type="datetime-local" name="due-time" id="due-time">               
                 `;
         deleteBtnElement.innerHTML = `
-                    <img class="icons" src="./images/done.svg" alt=""> Done
+                    <img class="icons" src="./images/done.svg" alt=""> <span  class="icon-texts"> Done </span>
                 `;
 
         editBtnElement.innerHTML = `
-                    <img class="icons" src="./images/cancel.svg" alt=""> Cancel
+                    <img class="icons" src="./images/cancel.svg" alt=""> <span  class="icon-texts"> Cancel </span>
        
                 `;
     }
@@ -363,11 +363,11 @@ document.querySelector('.card-container').addEventListener('click', (e) => {
         dueTimeElement.innerHTML = saved.dueTime;
 
         deleteBtnElement.innerHTML = `
-                    <img class="icons" src="./images/delete-icon.svg" alt=""> Delete
+                    <img class="icons" src="./images/delete-icon.svg" alt=""> <span  class="icon-texts">Delete </span>
                 `
 
         editBtnElement.innerHTML = `
-                    <img class="icons" src="./images/edit-icon.svg" alt=""> Edit
+                    <img class="icons" src="./images/edit-icon.svg" alt=""> <span  class="icon-texts">Edit </span>
        
                 `
         titleElement.classList.remove('edit-outline');
@@ -435,9 +435,9 @@ document.querySelector('.card-container').addEventListener('click', (e) => {
 
 
     if (card.classList.contains('collapsed')) {
-        collapseBtn.textContent = 'Expand';
+        collapseBtn.innerHTML = '<img  class="collapse-icons" src="./images/expand.svg" alt=""></img>';
     } else {
-        collapseBtn.textContent = 'Collapse';
+        collapseBtn.innerHTML = '<img class="collapse-icons" src="./images/collapse.svg" alt=""></img>';
     }
 
 });
